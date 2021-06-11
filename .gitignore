@@ -122,3 +122,4 @@ server/
 
 # Gradle
 .gradle/
+!gradle/wrapper/*.jar
