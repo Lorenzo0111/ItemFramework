@@ -24,6 +24,7 @@
 
 package me.lorenzo0111.itemframework;
 
+import me.lorenzo0111.itemframework.exceptions.InitializationException;
 import me.lorenzo0111.itemframework.items.CustomItem;
 import me.lorenzo0111.itemframework.listener.ClickListener;
 import org.bukkit.inventory.ItemStack;
@@ -36,8 +37,12 @@ import java.util.Map;
 /**
  * Main class of the framework
  */
+@SuppressWarnings("unused")
 public final class ItemFramework {
     private static final Map<Short, CustomItem> STORAGE = new HashMap<>();
+    private static JavaPlugin plugin;
+
+    private ItemFramework() {}
 
     /**
      * Check if an item is a custom item from the framework
@@ -49,7 +54,7 @@ public final class ItemFramework {
     }
 
     /**
-     * Get a custom item from the itemstack
+     * Get a custom item from the ItemStack
      * @param item Item to get
      * @return A custom item instance from the item
      */
@@ -84,6 +89,9 @@ public final class ItemFramework {
      * @param plugin Plugin that is using the framework
      */
     public static void init(JavaPlugin plugin) {
+        if (ItemFramework.plugin != null)
+            throw new InitializationException("The framework has already been initialized.");
+
         new ClickListener(plugin);
     }
 
