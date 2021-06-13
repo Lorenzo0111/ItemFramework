@@ -22,41 +22,14 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id 'maven-publish'
-}
+package me.lorenzo0111.itemframework.legacy;
 
-group 'me.lorenzo0111'
-version '1.1'
+import org.bukkit.inventory.ItemStack;
 
-repositories {
-    mavenCentral()
-    maven {
-        name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+public class LegacyHandler {
+
+    @SuppressWarnings("deprecation")
+    public static void setDamage(ItemStack item, short damage) {
+        item.setDurability(damage);
     }
-    maven {
-        name = 'sonatype'
-        url = 'https://oss.sonatype.org/content/groups/public/'
-    }
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-javadoc {
-    options.links(
-            'https://javadoc.io/static/org.jetbrains/annotations/20.1.0/',
-            'https://docs.oracle.com/javase/8/docs/api/',
-            'https://papermc.io/javadocs/paper/1.16/'
-    )
-    source = sourceSets.main.allJava
-}
-
-dependencies {
-    compileOnly 'org.jetbrains:annotations:20.1.0'
-    compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
 }

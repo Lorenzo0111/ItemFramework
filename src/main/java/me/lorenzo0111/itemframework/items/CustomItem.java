@@ -25,15 +25,18 @@
 package me.lorenzo0111.itemframework.items;
 
 import me.lorenzo0111.itemframework.actions.Action;
+import me.lorenzo0111.itemframework.legacy.LegacyHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +51,7 @@ public class CustomItem {
     /**
      * @param id identifier
      */
-    public CustomItem(short id) {
+    public CustomItem(int id) {
         this(new ItemStack(Material.DIAMOND_AXE),id);
     }
 
@@ -56,10 +59,14 @@ public class CustomItem {
      * @param item ItemStack
      * @param id identifier
      */
-    public CustomItem(ItemStack item, short id) {
+    public CustomItem(ItemStack item, int id) {
         this.item = item;
-        this.item.setDurability(id);
         this.meta = item.getItemMeta();
+        try {
+            Objects.requireNonNull(((Damageable) meta)).setDamage(id);
+        } catch (Exception ignored) {
+            LegacyHandler.setDamage(this.item,(short) id);
+        }
     }
 
     /**
