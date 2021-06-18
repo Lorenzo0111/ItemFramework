@@ -26,20 +26,23 @@ package me.lorenzo0111.itemframework;
 
 import me.lorenzo0111.itemframework.exceptions.InitializationException;
 import me.lorenzo0111.itemframework.items.CustomItem;
+import me.lorenzo0111.itemframework.items.IdentifierType;
 import me.lorenzo0111.itemframework.listener.ClickListener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Main class of the framework
  */
 @SuppressWarnings("unused")
 public final class ItemFramework {
-    private static final Map<Short, CustomItem> STORAGE = new HashMap<>();
+    private static final Map<Integer, CustomItem> STORAGE = new HashMap<>();
     private static JavaPlugin plugin;
 
     private ItemFramework() {}
@@ -58,16 +61,26 @@ public final class ItemFramework {
      * @param item Item to get
      * @return A custom item instance from the item
      */
+    @SuppressWarnings("deprecation")
     @Nullable
     public static CustomItem getCustomItem(ItemStack item) {
+        int found = -1;
+
         if (item == null)
             return null;
 
-        if (item.getDurability() <= 0)
-            return null;
+        try {
+            found = Objects.requireNonNull(item.getItemMeta()).getCustomModelData();
+        } catch (Exception ignored) {}
 
-        short id = item.getDurability();
-        return STORAGE.get(id);
+        if (item.getDurability() > 0)
+            found = item.getDurability();
+
+        try {
+            found = Objects.requireNonNull(((Damageable) item.getItemMeta())).getDamage();
+        } catch (Exception ignored) {}
+
+        return STORAGE.get(found);
     }
 
     /**
@@ -75,7 +88,7 @@ public final class ItemFramework {
      * @return a new custom item or null if that id already exist
      */
     @Nullable
-    public static CustomItem createCustomItem(short id) {
+    public static CustomItem createCustomItem(int id) {
         if (STORAGE.containsKey(id))
             return null;
 
@@ -83,6 +96,22 @@ public final class ItemFramework {
         STORAGE.put(id,item);
         return item;
     }
+
+    /**
+     * @param id identifier, it is the durability of the ItemStack
+     * @param type Type of identifier
+     * @return a new custom item or null if that id already exist
+     */
+    @Nullable
+    public static CustomItem createCustomItem(int id, IdentifierType type) {
+        if (STORAGE.containsKey(id))
+            return null;
+
+        CustomItem item = new CustomItem(type,id);
+        STORAGE.put(id,item);
+        return item;
+    }
+
 
     /**
      * Required to make the framework work
@@ -98,7 +127,7 @@ public final class ItemFramework {
     /**
      * @return Storage
      */
-    public static Map<Short, CustomItem> getStorage() {
+    public static Map<Integer, CustomItem> getStorage() {
         return STORAGE;
     }
 }

@@ -22,41 +22,19 @@
  * SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id 'maven-publish'
-}
+package me.lorenzo0111.itemframework.items;
 
-group 'me.lorenzo0111'
-version '1.1.1'
-
-repositories {
-    mavenCentral()
-    maven {
-        name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-    }
-    maven {
-        name = 'sonatype'
-        url = 'https://oss.sonatype.org/content/groups/public/'
-    }
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-javadoc {
-    options.links(
-            'https://javadoc.io/static/org.jetbrains/annotations/20.1.0/',
-            'https://docs.oracle.com/javase/8/docs/api/',
-            'https://papermc.io/javadocs/paper/1.16/'
-    )
-    source = sourceSets.main.allJava
-}
-
-dependencies {
-    compileOnly 'org.jetbrains:annotations:20.1.0'
-    compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+/**
+ * Type of the identifier
+ */
+public enum IdentifierType {
+    /**
+     * Custom Model Data
+     * If you are using legacy version the plugin will recognize that and will use {@link IdentifierType#DAMAGE}
+     */
+    CMD,
+    /**
+     * Damage
+     */
+    DAMAGE
 }

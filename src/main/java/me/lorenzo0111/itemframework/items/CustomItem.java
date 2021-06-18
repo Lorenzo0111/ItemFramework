@@ -56,17 +56,44 @@ public class CustomItem {
     }
 
     /**
+     * @param type Type of the identifiier
+     * @param id identifier
+     */
+    public CustomItem(IdentifierType type, int id) {
+        this(new ItemStack(Material.DIAMOND_AXE),id,type);
+    }
+
+    /**
      * @param item ItemStack
      * @param id identifier
      */
     public CustomItem(ItemStack item, int id) {
+        this(item,id,IdentifierType.DAMAGE);
+    }
+
+    /**
+     * @param item ItemStack
+     * @param id identifier
+     * @param type type of the identifier
+     */
+    public CustomItem(ItemStack item, int id, IdentifierType type) {
         this.item = item;
         this.meta = item.getItemMeta();
-        try {
-            Objects.requireNonNull(((Damageable) meta)).setDamage(id);
-        } catch (Exception ignored) {
-            LegacyHandler.setDamage(this.item,(short) id);
+        switch (type) {
+            case CMD:
+                try {
+                    Objects.requireNonNull(item.getItemMeta()).setCustomModelData(id);
+                    break;
+                } catch (Exception ignored) {}
+            case DAMAGE:
+                try {
+                    Objects.requireNonNull(((Damageable) meta)).setDamage(id);
+                } catch (Exception ignored) {
+                    LegacyHandler.setDamage(this.item,(short) id);
+                }
+                break;
         }
+
     }
 
     /**
